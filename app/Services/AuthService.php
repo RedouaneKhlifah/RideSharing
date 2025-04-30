@@ -131,6 +131,7 @@ class AuthService
         } catch (JWTException $e) {
             return response()->json([
                 'message' => 'Could not create token',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -286,11 +287,7 @@ class AuthService
     public function verifyEmail(int $userId, string $verificationCode): array
     {
         // Check if the verification code exists and is valid
-        $verification = DB::table('email_verifications')
-            ->where('user_id', $userId)
-            ->where('code', $verificationCode)
-            ->where('expires_at', '>', now())
-            ->first();
+        $verification = $this->verifyCode($userId, $verificationCode);
         
         if (!$verification) {
             return [
@@ -312,5 +309,17 @@ class AuthService
         return [
             'success' => true
         ];
+    }
+
+    public function verifyCode(string $email, string $verificationCode): bool
+    {
+        // Check if the verification code exists and is valid
+        $verification = DB::table('email_verifications')
+            ->where('email', $email)
+            ->where('code', $verificationCode)
+            ->where('expires_at', '>', now())
+            ->first();
+
+            return $verification ? true : false;
     }
 }

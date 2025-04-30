@@ -9,18 +9,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api', 'SetLocale'])->group(function () {
     
+    Route::post('/auth/send-verification', [AuthController::class, 'sendVerificationCode']);
     Route::post('/auth/verify-email', [AuthController::class, 'verifyEmail']);
+    Route::post('/auth/verify-code', [AuthController::class, 'verifyCode']);
 
     Route::prefix('auth')->controller(AuthController::class)->group(function () {
         Route::post('/sign-up', 'signUp');
         Route::post('/sign-in', 'signIn');
         Route::post('/refresh-token', 'refreshToken');
         Route::post('/logout', 'logout');
+        Route::post('/reset-password', 'resetPassword');
+        
     });
 
     // Protected routes requiring JWT authentication
-    Route::middleware('auth:api')->group(function () {
-        Route::post('/auth/resend-verification', [AuthController::class, 'resendVerificationCode']);
+    Route::middleware( 'auth:api')->group(function () {
+
 
         // Get authenticated user
         Route::get('/user', function (Request $request) {

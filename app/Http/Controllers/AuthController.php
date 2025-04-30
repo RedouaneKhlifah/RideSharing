@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequests\RefreshTokenRequest;
+use App\Http\Requests\AuthRequests\sendVerificationCodeRequest;
 use App\Http\Requests\AuthRequests\SignInRequest;
+use App\Http\Requests\AuthRequests\VerifyCodeRequest;
 use App\Http\Requests\AuthRequests\VerifyEmailRequest;
+use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 
@@ -16,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Auth\Events\Registered;
 use App\Events\UserRegistered;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -116,41 +120,73 @@ class AuthController extends Controller
      * 
      * @param VerifyEmailRequest $request
      * @return JsonResponse
-     */
+    */
     public function verifyEmail(VerifyEmailRequest $request): JsonResponse
     {
-        $result = $this->authService->verifyEmail($request->user_id, $request->verification_code);
-        
+        $user = User::where('email', $request->email)->first();
+    
+        if (!$user) {
+            // Avoid revealing existence of the user
+            return response()->json(['message' => 'Invalid email or verification code'], 400);
+        }
+    
+        // Optional: Check if already verified
+        if ($user->email_verified_at) {
+            return response()->json(['message' => 'Email is already verified'], 400);
+        }
+    
+        $result = $this->authService->verifyEmail($user->id, $request->verification_code);
+    
         if ($result['success']) {
             return response()->json(['message' => 'Email verified successfully'], 200);
         }
-        
-        return response()->json(['message' => $result['message']], 400);
+    
+        return response()->json(['message' => $result['message'] ?? 'Verification failed'], 400);
     }
+
+        
     
     /**
      * Resend verification code email.
      * 
      * @return JsonResponse
      */
-    public function resendVerificationCode(): JsonResponse
+    public function sendVerificationCode(sendVerificationCodeRequest $request): JsonResponse
     {
-        $user = Auth::user();
-        
-        if ($user->email_verified_at) {
-            return response()->json(['message' => 'Email already verified'], 400);
+        $user = User::where('email', $request->email)->first();
+    
+        if (!$user || $user->email_verified_at) {
+            // Avoid revealing user existence
+            return response()->json(['message' => 'If your email is registered, a verification code has been sent.'], 200);
         }
-        
-        // Generate new verification code
+    
+        // Optionally rate-limit here
+    
         $verificationCode = $this->authService->generateEmailVerificationCode($user);
-        
-        // Send email with verification code
-        event(new UserRegistered($user, $verificationCode));
-        
-        Log::info('Verification code sent to user: ' . $user->email);
-        
+    
+        event(new UserRegistered($user, $verificationCode)); // Better event name
+    
         return response()->json(['message' => 'Verification code sent to your email'], 200);
     }
+
+    public function verifyCode(VerifyCodeRequest $request): JsonResponse
+    {
+        $user = User::where('email', $request->email)->first();
+    
+        if (!$user) {
+            // Avoid revealing existence of the user
+            return response()->json(['message' => 'Invalid email or verification code'], 400);
+        }
+
+        $verificationCode = $this->authService->verifyCode($user->email, $request->verification_code);
+    
+        if ($verificationCode) {
+            return response()->json(['message' => 'Verification code is valid'], 200);
+        }
+    
+        return response()->json(['message' => 'Invalid or expired verification code'], 400);
+    }
+    
 
     /**
      * Refresh access token
