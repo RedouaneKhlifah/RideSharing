@@ -131,7 +131,6 @@ class AuthService
         } catch (JWTException $e) {
             return response()->json([
                 'message' => 'Could not create token',
-                'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -311,11 +310,11 @@ class AuthService
         ];
     }
 
-    public function verifyCode(string $email, string $verificationCode): bool
+    public function verifyCode(string $id, string $verificationCode): bool
     {
         // Check if the verification code exists and is valid
         $verification = DB::table('email_verifications')
-            ->where('email', $email)
+            ->where('id', $id)
             ->where('code', $verificationCode)
             ->where('expires_at', '>', now())
             ->first();
