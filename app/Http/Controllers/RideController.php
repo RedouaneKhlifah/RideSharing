@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RideRequest;
 use App\Http\Requests\RideFilterRequest;
+use App\Http\Requests\StoreRideRequest;
 use App\Models\Ride;
 use App\Services\RideService;
 use Illuminate\Http\JsonResponse;
@@ -74,11 +74,11 @@ class RideController extends Controller
     /**
      * Update the specified ride in storage.
      *
-     * @param RideRequest $request
+     * @param StoreRideRequest $request
      * @param Ride $ride
      * @return JsonResponse
      */
-    public function update(RideRequest $request, Ride $ride): JsonResponse
+    public function update(StoreRideRequest $request, Ride $ride): JsonResponse
     {
         if (!$this->rideService->userOwnsRide($ride)) {
             return response()->json([

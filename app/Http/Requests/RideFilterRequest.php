@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+
 
 class RideFilterRequest extends FormRequest
 {
@@ -11,7 +13,8 @@ class RideFilterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::user()->email_verified_at !== null;
+
     }
 
     /**

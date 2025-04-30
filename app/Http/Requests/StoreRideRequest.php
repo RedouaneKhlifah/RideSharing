@@ -6,14 +6,15 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class RideRequest extends FormRequest
+class StoreRideRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return Auth::check() && Auth::user()->role === 'driver';
+        $user = Auth::user();
+        return $user && $user->role === 'driver' && $user->email_verified_at !== null;
     }
     
     protected function failedAuthorization()
