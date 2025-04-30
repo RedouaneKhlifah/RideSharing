@@ -101,11 +101,11 @@ class AuthService
      */
     public function storeUserPhoto($photo): string
     {
-        // Store the photo in the storage/app/public/users directory
-        $path = $photo->store('public/users/photos');
-        
-        // Return the path that will be accessible via the storage link
-        return str_replace('public/', '', $path);
+        // Store photo in users/photos under the public disk
+        $path = $photo->store('users/photos', 'public');
+    
+        // This will return something like 'users/photos/filename.png'
+        return 'storage/' . $path;
     }
 
     /**
