@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('name'); // Changed from fullName to match interface
             $table->string('email')->unique();
             $table->string('phone');
-            $table->string('city');
-            $table->string('address');
-            $table->string('photo');
+            $table->string('city')->nullable();
+            $table->string('address')->nullable();
+            $table->string('photo')->nullable();
             $table->enum('sex', ['male', 'female', 'other'])->default('other');
             $table->enum('role', ['regular', 'driver'])->default('regular');
             $table->string('car_model')->nullable();

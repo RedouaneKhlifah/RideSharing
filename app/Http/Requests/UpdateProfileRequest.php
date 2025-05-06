@@ -24,19 +24,19 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes |string|max:255',
+            'name' => 'required |string|max:255',
             'phone' => [
                 'required',
                 'string',
                 // 'regex:/^(?:\+212|0)([5-7]\d{8})$/',
                 'max:20',
             ],
-            'city' => 'sometimes|string|max:255',
-            'address' => 'sometimes|string|max:255',
-            'photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'sex' => 'sometimes|in:male,female,other',
-            'car_model' => 'sometimes:role,driver|string|max:255',
-            'matricule' => 'sometimes:role,driver|string|max:255',
+            'city' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'sex' => 'required|in:male,female,other',
+            'car_model' => 'required:role,driver|string|max:255',
+            'matricule' => 'required:role,driver|string|max:255',
         ];
     }
 

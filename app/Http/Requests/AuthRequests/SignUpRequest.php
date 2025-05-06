@@ -32,13 +32,7 @@ class SignUpRequest extends FormRequest
                 // 'regex:/^(?:\+212|0)([5-7]\d{8})$/',
                 'max:20',
             ],
-            'city' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'sex' => 'required|in:male,female,other',
             'role' => 'required|in:regular,driver',
-            'car_model' => 'required_if:role,driver|string|max:255',
-            'matricule' => 'required_if:role,driver|string|max:255',
         ];
     }
     /**

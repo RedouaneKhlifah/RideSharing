@@ -11,14 +11,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use App\Services\AuthService;
+
 class UserController extends Controller
 {
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
     /**
      * Get authenticated user's profile
      */
     public function profile(): JsonResponse
     {
-        return response()->json(['user' => Auth::user()]);
+        return response()->json(Auth::user());
     }
     
     /**
@@ -30,6 +38,10 @@ class UserController extends Controller
         $user = Auth::user();
     
         $validatedData = $request->validated();
+
+        if ($request->hasFile('photo')) {
+            $validatedData['photo'] = $this->authService->storeUserPhoto($request->file('photo'));
+        }
     
         $user->update($validatedData);
     

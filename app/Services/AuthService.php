@@ -84,13 +84,7 @@ class AuthService
              'email' => $data['email'],
              'password' => bcrypt($data['password']),
              'phone' => $data['phone'],
-             'city' => $data['city'],
-             'address' => $data['address'],
-             'photo' => $data['photo'],
-             'sex' => $data['sex'],
              'role' => $data['role'],
-             'car_model' => $data['car_model'] ?? null,
-             'matricule' => $data['matricule']?? null,
          ]);
      }
     /**

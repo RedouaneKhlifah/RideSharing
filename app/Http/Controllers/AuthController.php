@@ -87,10 +87,6 @@ class AuthController extends Controller
         
         try {
             $data = $request->validated();
-            
-            if ($request->hasFile('photo')) {
-                $data['photo'] = $this->authService->storeUserPhoto($request->file('photo'));
-            }
         
             $user = $this->authService->createUser($data);
             
