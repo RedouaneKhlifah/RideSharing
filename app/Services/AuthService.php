@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 
 class AuthService
 {
@@ -182,7 +183,8 @@ class AuthService
         $refreshToken = bin2hex(random_bytes(32));
         Cache::put('refresh_token:'.$refreshToken, $user->id, now()->addDays(30));
         return $refreshToken;
-    }    
+    } 
+    
 
     /**
      * Refresh access token
@@ -314,5 +316,27 @@ class AuthService
             ->first();
 
             return $verification ? true : false;
+    }
+
+    public function createResetToken(string $email): string
+    {
+        // Generate a random token
+        $token = Str::random(64);
+
+        // Store it in cache for 15 minutes
+        Cache::put('reset_password_token_' . $token, $email, now()->addMinutes(15));
+
+        return $token;
+    }
+
+    public function validateResetToken(string $token): ?string
+    {
+        // Retrieve the email from cache
+        return Cache::get('reset_password_token_' . $token);
+    }
+
+    public function invalidateResetToken(string $token): void
+    {
+        Cache::forget('reset_password_token_' . $token);
     }
 }

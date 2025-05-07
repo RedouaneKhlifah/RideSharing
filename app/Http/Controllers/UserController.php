@@ -51,26 +51,26 @@ class UserController extends Controller
     /**
      * Change password
      */
-    // public function changePassword(Request $request): JsonResponse
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'current_password' => 'required|string',
-    //         'new_password' => 'required|string|min:8|confirmed',
-    //     ]);
+    public function changePassword(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
         
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
         
-    //     $user = Auth::user();
+        $user = Auth::user();
         
-    //     if (!Hash::check($request->current_password, $user->password)) {
-    //         return response()->json(['error' => 'Current password is incorrect'], 401);
-    //     }
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json(['error' => 'Current password is incorrect'], 401);
+        }
         
-    //     $user->password = Hash::make($request->new_password);
-    //     $user->save();
+        $user->password = Hash::make($request->new_password);
+        $user->save();
         
-    //     return response()->json(['message' => 'Password changed successfully']);
-    // }
+        return response()->json(['message' => 'Password changed successfully']);
+    }
 }

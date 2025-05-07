@@ -7,6 +7,8 @@ use App\Http\Requests\AuthRequests\sendVerificationCodeRequest;
 use App\Http\Requests\AuthRequests\SignInRequest;
 use App\Http\Requests\AuthRequests\VerifyCodeRequest;
 use App\Http\Requests\AuthRequests\VerifyEmailRequest;
+use App\Http\Requests\AuthRequests\VerifyResetPasswordCodeRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
@@ -199,4 +201,55 @@ class AuthController extends Controller
     {
         return $this->authService->logout($request->refresh_token);
     }
+
+    /**
+     * verify reset password code
+    */
+
+    public function verifyResetPasswordCode(VerifyResetPasswordCodeRequest $request): JsonResponse
+    {
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !$this->authService->verifyCode($user->email, $request->verification_code)) {
+            return response()->json(['message' => 'Invalid email or verification code'], 400);
+        }
+
+        // Optionally generate a short-lived reset token (UUID or random string)
+        $resetToken = $this->authService->createResetToken($user->email);
+
+        return response()->json([
+            'message' => 'Verification code is valid',
+            'reset_token' => $resetToken,
+        ]);
+    }
+
+    /**
+     * Reset password
+     */
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        // Check if the reset token is valid
+        $email = $this->authService->validateResetToken($request->reset_token);
+        if (!$email || $email !== $request->email) {
+            return response()->json(['message' => 'Invalid or expired reset token'], 400);
+        }
+        // Find the user by email
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Update the user's password
+        $user->password = bcrypt($request->password);
+        $user->save();
+        // Clear the reset token cache
+        return response()->json(['message' => 'Password reset successfully']);
+    }
+
+
+
+
+
+
 }

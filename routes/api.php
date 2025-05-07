@@ -18,6 +18,7 @@ Route::middleware(['api', 'SetLocale'])->group(function () {
         Route::post('/sign-in', 'signIn');
         Route::post('/refresh-token', 'refreshToken');
         Route::post('/logout', 'logout');
+        Route::post('/verify-reset-password-code', 'verifyResetPasswordCode');
         Route::post('/reset-password', 'resetPassword');
         
     });
