@@ -211,7 +211,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !$this->authService->verifyCode($user->email, $request->verification_code)) {
+        if (!$user || !$this->authService->verifyCode($user->id, $request->verification_code)) {
             return response()->json(['message' => 'Invalid email or verification code'], 400);
         }
 
