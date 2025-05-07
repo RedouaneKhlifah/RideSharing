@@ -23,7 +23,7 @@ class VerifyResetPasswordCodeRequest extends FormRequest
     {
         return [
             'email' => 'required|email|exists:users,email',
-            'verification_code' => 'required|string|max:6',
+            'verification_code' => 'required|digits:4',
         ];
     }
 }
