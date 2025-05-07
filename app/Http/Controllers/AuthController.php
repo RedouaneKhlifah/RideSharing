@@ -8,7 +8,7 @@ use App\Http\Requests\AuthRequests\SignInRequest;
 use App\Http\Requests\AuthRequests\VerifyCodeRequest;
 use App\Http\Requests\AuthRequests\VerifyEmailRequest;
 use App\Http\Requests\AuthRequests\VerifyResetPasswordCodeRequest;
-use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\AuthRequests\ResetPasswordRequest;
 use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
@@ -17,17 +17,14 @@ use App\Http\Requests\AuthRequests\SignUpRequest;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Auth\Events\Registered;
 use App\Events\UserRegistered;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
     /**
      * The authentication service.
-     *
+     *ss
      * @var AuthService
      */
     protected AuthService $authService;
