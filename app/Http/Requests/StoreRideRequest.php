@@ -8,18 +8,26 @@ use Illuminate\Support\Facades\Auth;
 
 class StoreRideRequest extends FormRequest
 {
+    protected $user = null;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $user = Auth::user();
-        return $user && $user->role === 'driver' && $user->email_verified_at !== null;
+        $this->user = Auth::user();
+        return  $this->user && 
+                $this->user->email_verified_at !== null  &&
+                $this->user->role === 'driver';
     }
     
     protected function failedAuthorization()
     {
-        throw new AuthorizationException('Only drivers are allowed to create a ride.');
+        if ($this->user && $this->user->role !== 'driver') {
+            throw new AuthorizationException('Only drivers are allowed to create a ride.');
+        }
+
+        parent::failedAuthorization(); // default Laravel message
     }
 
     /**
