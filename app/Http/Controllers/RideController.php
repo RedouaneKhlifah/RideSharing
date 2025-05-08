@@ -44,10 +44,10 @@ class RideController extends Controller
     /**
      * Store a newly created ride in storage.
      *
-     * @param RideRequest $request
+     * @param StoreRideRequest $request
      * @return JsonResponse
      */
-    public function store(RideRequest $request): JsonResponse
+    public function store(StoreRideRequest $request): JsonResponse
     {
         $ride = $this->rideService->createRide($request->validated());
         
