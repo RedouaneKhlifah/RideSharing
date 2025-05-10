@@ -21,7 +21,8 @@ class Ride extends Model
         'destination',
         'departure_time',
         'available_seats',
-        'is_archived',
+        'price',
+        'is_archived'
     ];
 
     /**
