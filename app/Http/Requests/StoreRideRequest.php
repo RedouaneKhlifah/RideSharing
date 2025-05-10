@@ -42,6 +42,7 @@ class StoreRideRequest extends FormRequest
             'destination' => 'required|string|max:255',
             'departure_time' => 'required|date_format:Y-m-d\TH:i:s\Z|after:now',
             'available_seats' => 'required|integer|min:1',
+            'price' => 'nullable|numeric|min:0',
         ];
     }
 }

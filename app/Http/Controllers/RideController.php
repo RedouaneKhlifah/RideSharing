@@ -82,7 +82,7 @@ class RideController extends Controller
     {
         if (!$this->rideService->userOwnsRide($ride)) {
             return response()->json([
-                'message' => 'you can only update your own rides'
+                'message' => 'Unauthorized'
             ], Response::HTTP_FORBIDDEN);
         }
         
@@ -122,7 +122,7 @@ class RideController extends Controller
     {
         if (!$this->rideService->userOwnsRide($ride)) {
             return response()->json([
-                'message' => 'you can only delete your own rides'
+                'message' => 'Unauthorized'
             ], Response::HTTP_FORBIDDEN);
         }
         
