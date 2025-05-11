@@ -309,7 +309,7 @@ class AuthService
     {
         // Check if the verification code exists and is valid
         $verification = DB::table('email_verifications')
-            ->where('id', $id)
+            ->where('id',  $id)
             ->where('code', $verificationCode)
             ->where('expires_at', '>', now())
             ->first();
