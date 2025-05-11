@@ -17,6 +17,7 @@ use App\Http\Requests\AuthRequests\SignUpRequest;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Events\UserRegistered;
 
@@ -130,6 +131,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Email is already verified'], 400);
         }
     
+
+        
         $result = $this->authService->verifyEmail($user->id, $request->verification_code);
     
         if ($result['success']) {
@@ -173,13 +176,20 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid email or verification code'], 400);
         }
 
+        
+        Log::info('Email verification code: ' . $request->verification_code);
+        Log::info('User ID: ' . $user->id);
+
         $verificationCode = $this->authService->verifyCode($user->email, $request->verification_code);
     
-        if ($verificationCode) {
-            return response()->json(['message' => 'Verification code is valid'], 200);
+        Log::info('Verification code check result: ' . ($verificationCode ? 'valid' : 'invalid'));
+
+        if (!$verificationCode) {
+                    return response()->json(['message' => 'Invalid or expired verification code'], 400);
         }
-    
-        return response()->json(['message' => 'Invalid or expired verification code'], 400);
+
+        return response()->json(['message' => 'Verification code is valid'], 200);
+
     }
     
 
