@@ -176,13 +176,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid email or verification code'], 400);
         }
 
-        
-        Log::info('Email verification code: ' . $request->verification_code);
-        Log::info('User ID: ' . $user->id);
-
-        $verificationCode = $this->authService->verifyCode($user->email, $request->verification_code);
+        $verificationCode = $this->authService->verifyCode($user->id, $request->verification_code);
     
-        Log::info('Verification code check result: ' . ($verificationCode ? 'valid' : 'invalid'));
 
         if (!$verificationCode) {
                     return response()->json(['message' => 'Invalid or expired verification code'], 400);
@@ -218,8 +213,15 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !$this->authService->verifyCode($user->id, $request->verification_code)) {
-            return response()->json(['message' => 'Invalid email or verification code'], 400);
+        $verificationCode = $this->authService->verifyCode($user->id, $request->verification_code);
+
+        Log::info('User id: ' . $request->id);
+        Log::info('Verifying reset password code for user: ' . $user->email);
+        Log::info('Verification code: ' . $request->verification_code);
+        Log::info('Verification result: ' . ($verificationCode ? 'Valid' : 'Invalid'));
+        
+        if (!$user || !$verificationCode ) {
+            return response()->json(['message' => 'Invalid email or verification code'],  400);
         }
 
         // Optionally generate a short-lived reset token (UUID or random string)
