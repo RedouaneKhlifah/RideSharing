@@ -307,17 +307,25 @@ class AuthService
 
     public function verifyCode(string $id, string $verificationCode): bool
     {
-
         // Check if the verification code exists and is valid
         $verification = DB::table('email_verifications')
-            ->where('user_id',  $id)
+            ->where('user_id', $id)
             ->where('code', $verificationCode)
             ->where('expires_at', '>', now())
             ->first();
-            
 
-            return $verification ? true : false;
+        if ($verification) {
+            // Delete the used code
+            DB::table('email_verifications')
+                ->where('id', $verification->id)
+                ->delete();
+
+            return true;
+        }
+
+        return false;
     }
+
 
     public function createResetToken(string $email): string
     {
