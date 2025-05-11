@@ -23,11 +23,6 @@ class SendEmailVerificationListener implements ShouldQueue
     public function handle(UserRegistered $event)
     {
                 
-        // Add debug tracing to see when and where this event is created
-        Log::info('UserRegistered event created', [
-            'user_id' => $event->user->id,
-            'email' => $event->user->email,
-        ]);
         Mail::to($event->user->email)->send(new EmailVerification($event->user, $event->verificationCode));
 
     }

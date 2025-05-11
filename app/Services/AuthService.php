@@ -308,12 +308,9 @@ class AuthService
     public function verifyCode(string $id, string $verificationCode): bool
     {
 
-        Log::info('Verifying code for user ID: ' . $id);
-        Log::info('Verification code: ' . $verificationCode);
-        
         // Check if the verification code exists and is valid
         $verification = DB::table('email_verifications')
-            ->where('id',  $id)
+            ->where('user_id',  $id)
             ->where('code', $verificationCode)
             ->where('expires_at', '>', now())
             ->first();
