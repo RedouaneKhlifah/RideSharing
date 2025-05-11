@@ -215,7 +215,7 @@ class AuthController extends Controller
 
         $verificationCode = $this->authService->verifyCode($user->id, $request->verification_code);
 
-        Log::info('User id: ' . $request->id);
+        Log::info('User id: ' . $user->id);
         Log::info('Verifying reset password code for user: ' . $user->email);
         Log::info('Verification code: ' . $request->verification_code);
         Log::info('Verification result: ' . ($verificationCode ? 'Valid' : 'Invalid'));
