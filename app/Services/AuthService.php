@@ -221,7 +221,6 @@ class AuthService
         try {
             // Invalidate the JWT token if it exists
             $token = JWTAuth::getToken();
-            Log::info('Token: '.$token);
             if ($token) {
                 JWTAuth::invalidate($token);
             }

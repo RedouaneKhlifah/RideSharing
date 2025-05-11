@@ -150,7 +150,7 @@ class AuthController extends Controller
     {
         $user = User::where('email', $request->email)->first();
     
-        if (!$user || $user->email_verified_at) {
+        if (!$user) {
             // Avoid revealing user existence
             return response()->json(['message' => 'If your email is registered, a verification code has been sent.'], 200);
         }
@@ -243,10 +243,6 @@ class AuthController extends Controller
         // Clear the reset token cache
         return response()->json(['message' => 'Password reset successfully']);
     }
-
-
-
-
 
 
 }
