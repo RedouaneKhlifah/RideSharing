@@ -33,7 +33,7 @@ class UpdateProfileRequest extends FormRequest
             ],
             'city' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'sex' => 'required|in:male,female,other',
             'car_model' => 'required:role,driver|string|max:255',
             'matricule' => 'required:role,driver|string|max:255',
