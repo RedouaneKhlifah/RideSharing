@@ -37,8 +37,6 @@ class UpdateProfileRequest extends FormRequest
             'address' => 'required|string|max:255',
             'photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'sex' => 'required|in:male,female,other',
-            'role' => 'required|in:regular,driver',
-
             // Conditionally required if user is a driver
             'car_model' => [
                 Rule::requiredIf($this->user && $this->user->role === 'driver'),
@@ -56,7 +54,6 @@ class UpdateProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone.regex' => 'The phone number must be a valid Moroccan mobile number (starting with +212 or 0 followed by 5, 6, or 7).',
             'photo.image' => 'The photo must be an image file.',
             'photo.mimes' => 'The photo must be a file of type: jpeg, png, jpg, gif.',
             'photo.max' => 'The photo may not be greater than 2MB in size.',
