@@ -1,30 +1,32 @@
 <?php
 
 namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Rule;
 
 class UpdateProfileRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return Auth::user()->email_verified_at !== null;
-    }
+    private $user;
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Prepare the data for validation.
      */
+    protected function prepareForValidation(): void
+    {
+        $this->user = Auth::user();
+    }
+
+    public function authorize(): bool
+    {
+        return $this->user?->email_verified_at !== null;
+    }
+
     public function rules(): array
     {
         return [
-            'name' => 'required |string|max:255',
+            'name' => 'required|string|max:255',
             'phone' => [
                 'required',
                 'string',
@@ -35,16 +37,22 @@ class UpdateProfileRequest extends FormRequest
             'address' => 'required|string|max:255',
             'photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'sex' => 'required|in:male,female,other',
-            'car_model' => 'required:role,driver|string|max:255',
-            'matricule' => 'required:role,driver|string|max:255',
+            'role' => 'required|in:regular,driver',
+
+            // Conditionally required if user is a driver
+            'car_model' => [
+                Rule::requiredIf($this->user && $this->user->role === 'driver'),
+                'string',
+                'max:255',
+            ],
+            'matricule' => [
+                Rule::requiredIf($this->user && $this->user->role === 'driver'),
+                'string',
+                'max:255',
+            ],
         ];
     }
 
-    /**
-     * Get custom validation messages.
-     *
-     * @return array<string, string>
-     */
     public function messages(): array
     {
         return [
@@ -53,9 +61,8 @@ class UpdateProfileRequest extends FormRequest
             'photo.mimes' => 'The photo must be a file of type: jpeg, png, jpg, gif.',
             'photo.max' => 'The photo may not be greater than 2MB in size.',
             'sex.in' => "Sex must be either 'male', 'female', or 'other'.",
-            'role.in' => "The role must be either 'regular' or 'driver'.",
-            'car_model.required_if' => 'The car model is required when the role is driver.',
-            'matricule.required_if' => 'The matricule is required when the role is driver.',
+            'car_model.required_if' => 'The car model is required for drivers.',
+            'matricule.required_if' => 'The matricule is required for drivers.',
         ];
     }
 }
