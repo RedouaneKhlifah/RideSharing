@@ -23,12 +23,9 @@
 </div>
 @endcomponent
 
-@component('mail::button', ['url' => config('app.url'), 'color' => 'primary'])
-Return to Website
-@endcomponent
 
 <p style="font-size: 14px; color: #64748b; margin-top: 25px; line-height: 1.5;">
-    If you did not create an account, no further action is required.
+    If you did not request code, no further action is required.
 </p>
 
 <div style="margin: 30px 0; border-top: 1px solid #e2e8f0; padding-top: 20px;">
