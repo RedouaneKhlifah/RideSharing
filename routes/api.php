@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['api', 'SetLocale'])->group(function () {
     
     Route::post('/auth/send-verification', [AuthController::class, 'sendVerificationCode']);
+    Route::post('/auth/send-reset-verification', [AuthController::class, 'sendResetVerificationCode']);
     Route::post('/auth/verify-email', [AuthController::class, 'verifyEmail']);
     Route::post('/auth/verify-code', [AuthController::class, 'verifyCode']);
 

@@ -25,6 +25,14 @@ class EmailVerification extends Mailable
      */
     public $verificationCode;
 
+
+    /**
+     * The title of the email.
+     *
+     * @var string
+     */
+    public $title = 'Email Verification Code';
+
     /**
      * Create a new message instance.
      *
@@ -32,10 +40,11 @@ class EmailVerification extends Mailable
      * @param string $verificationCode
      * @return void
      */
-    public function __construct(User $user, string $verificationCode)
+    public function __construct(User $user, string $verificationCode , $title = 'Email Verification Code')
     {
         $this->user = $user;
         $this->verificationCode = $verificationCode;
+        $this->title = $title;
     }
 
     /**
@@ -46,6 +55,6 @@ class EmailVerification extends Mailable
     public function build()
     {
         return $this->markdown('emails.verify-email')
-                    ->subject('Email Verification Code');
+                    ->subject($this->title);
     }
 }
