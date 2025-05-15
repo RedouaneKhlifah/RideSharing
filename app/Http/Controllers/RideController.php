@@ -97,7 +97,7 @@ class RideController extends Controller
      * @param Ride $ride
      * @return JsonResponse
      */
-    public function archive(Ride $ride): JsonResponse
+    public function toggleArchive(Ride $ride): JsonResponse
     {
         if (!$this->rideService->userOwnsRide($ride)) {
             return response()->json([

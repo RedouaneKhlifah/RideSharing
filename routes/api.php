@@ -50,10 +50,10 @@ Route::middleware(['api', 'SetLocale'])->group(function () {
             Route::get('/my-rides', 'myRides');
             Route::get('/{ride}', 'show');
             Route::put('/{ride}', 'update');
-            Route::patch('/{ride}/archive', 'archive');
+            Route::patch('/{ride}/toggle-archive', 'toggleArchive');
             Route::delete('/{ride}', 'destroy');
 
         });
-        
+
     });
 });

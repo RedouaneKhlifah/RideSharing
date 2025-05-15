@@ -30,7 +30,12 @@ class RideRepository
      */
     public function getAll(): Collection
     {
-        return $this->model->where('is_archived', false)->where("departure_time" , ">", Carbon::now()) ->orderBy('departure_time', 'asc')->with('driver')->get();
+        return $this->model
+            ->where('is_archived', false) // Only not archived
+            ->where('departure_time', '>', Carbon::now()) // Only future rides
+            ->orderBy('departure_time', 'asc') // Soonest first
+            ->with('driver') // Eager load the driver
+            ->get();
     }
 
     /**
