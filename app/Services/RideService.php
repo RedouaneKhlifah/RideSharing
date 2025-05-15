@@ -79,9 +79,9 @@ class RideService
      * @param Ride $ride
      * @return Ride
      */
-    public function archiveRide(Ride $ride): Ride
+    public function toggleArchive(Ride $ride): Ride
     {
-        return $this->rideRepository->archive($ride);
+        return $this->rideRepository->toggleArchive($ride);
     }
 
     /**

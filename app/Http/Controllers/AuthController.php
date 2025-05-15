@@ -162,7 +162,7 @@ class AuthController extends Controller
     
         $verificationCode = $this->authService->generateEmailVerificationCode($user);
     
-        event(new UserRegistered($user, $verificationCode , 'Email Verification Code')); // Better event name
+        event(new UserRegistered($user, $verificationCode )); // Better event name
     
         return response()->json(['message' => 'Verification code sent to your email'], 200);
     }
@@ -180,7 +180,7 @@ class AuthController extends Controller
     
         $verificationCode = $this->authService->generateEmailVerificationCode($user);
     
-        event(new UserRegistered($user, $verificationCode , 'Reset Password Verification Code' )); // Better event name
+        event(new UserRegistered($user, $verificationCode )); // Better event name
     
         return response()->json(['message' => 'Verification code sent to your email'], 200);
     }

@@ -37,8 +37,7 @@ class RideController extends Controller
     {
         $rides = $this->rideService->getAllRides();
         
-        return response()->json( $rides
-        );
+        return response()->json( $rides);
     }
 
     /**
@@ -106,7 +105,7 @@ class RideController extends Controller
             ], Response::HTTP_FORBIDDEN);
         }
         
-        $archivedRide = $this->rideService->archiveRide($ride);
+        $archivedRide = $this->rideService->toggleArchive($ride);
         
         return response()->json( $archivedRide
         ,Response::HTTP_OK);

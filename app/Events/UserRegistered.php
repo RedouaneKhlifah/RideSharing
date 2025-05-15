@@ -27,24 +27,16 @@ class UserRegistered
     public $verificationCode;
 
     /**
-     * The title of the email.
-     *
-     * @var string
-     */
-    public $title = 'Email Verification Code';
-
-    /**
      * Create a new event instance.
      *
      * @param User $user
      * @param string $verificationCode
      * @return void
      */
-    public function __construct(User $user, string $verificationCode , $title = 'Email Verification Code')
+    public function __construct(User $user, string $verificationCode)
     {
         $this->user = $user;
         $this->verificationCode = $verificationCode;
-        $this->title = $title;
 
     }
 }

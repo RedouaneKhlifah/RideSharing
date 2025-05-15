@@ -30,9 +30,8 @@ class RideRepository
      */
     public function getAll(): Collection
     {
-        return $this->model->where('is_archived', false)->orderBy('departure_time', 'asc')->with('driver')->get();
+        return $this->model->where('is_archived', false)->where("departure_time" , ">", Carbon::now()) ->orderBy('departure_time', 'asc')->with('driver')->get();
     }
-
 
     /**
      * Get ride by ID.
@@ -77,9 +76,9 @@ class RideRepository
      * @param Ride $ride
      * @return Ride
      */
-    public function archive(Ride $ride): Ride
+    public function toggleArchive(Ride $ride): Ride
     {
-        $ride->is_archived = true;
+        $ride->is_archived = !$ride->is_archived;
         $ride->save();
         return $ride;
     }
@@ -136,7 +135,6 @@ class RideRepository
     public function getByDriverId(int $driverId):Collection
     {
         return $this->model->where('driver_id', $driverId)
-            ->where('is_archived', false)
             ->orderBy('departure_time', 'asc')->with("driver")->get();
     }
 }

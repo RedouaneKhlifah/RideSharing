@@ -54,7 +54,6 @@ Route::middleware(['api', 'SetLocale'])->group(function () {
             Route::delete('/{ride}', 'destroy');
 
         });
-    
-     
+        
     });
 });

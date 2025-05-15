@@ -3,14 +3,14 @@
     <img src="{{ asset('images/logo.png') }}" alt="Logo" style="max-width: 150px; margin-bottom: 20px;">
 </div>
 
-<h1 style="text-align: center; color: #4F46E5; font-size: 24px; margin-bottom: 20px;">{{ $title}}</h1>
+<h1 style="text-align: center; color: #4F46E5; font-size: 24px; margin-bottom: 20px;">Virification Code</h1>
 
 <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
     Hello <strong>{{ $user->name }}</strong>,
 </p>
 
 <p style="font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
-    Thank you for registering with our service. To complete your registration and verify your email address, please use the verification code below:
+    Please use the verification code below to proceed with your request.
 </p>
 
 @component('mail::panel')
