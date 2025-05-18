@@ -9,6 +9,7 @@ use App\Services\RideService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Http\Request;
 
 class RideController extends Controller
 {
@@ -151,10 +152,12 @@ class RideController extends Controller
      *
      * @return JsonResponse
      */
-    public function myRides(): JsonResponse
+    public function myRides(Request $request): JsonResponse
     {
-        $myRides = $this->rideService->getMyRides();
+        $archived = $request->query('archived', 'all'); // default is 'all'
         
-        return response()->json($myRides);
+        $myRides = $this->rideService->getMyRides($archived);
+        
+        return response()->json($myRides); 
     }
 }

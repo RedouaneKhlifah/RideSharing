@@ -113,10 +113,11 @@ class RideService
      * @param int $perPage
      * @return LengthAwarePaginator
      */
-    public function getMyRides():Collection
+    public function getMyRides(string $archived = 'all'): Collection
     {
-        return $this->rideRepository->getByDriverId(Auth::id());
+        return $this->rideRepository->getByDriverId(Auth::id(), $archived);
     }
+
 
     /**
      * Check if user owns a ride.

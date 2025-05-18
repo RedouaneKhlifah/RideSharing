@@ -137,9 +137,18 @@ class RideRepository
      * @param int $perPage
      * @return Collection
      */
-    public function getByDriverId(int $driverId):Collection
+    public function getByDriverId(int $driverId, string $archived = 'all'): Collection
     {
-        return $this->model->where('driver_id', $driverId)
-            ->orderBy('departure_time', 'asc')->with("driver")->get();
+        $query = $this->model->where('driver_id', $driverId);
+
+        if ($archived === 'active') {
+            $query->where('is_archived', false);
+        } elseif ($archived === 'archived') {
+            $query->where('is_archived', true);
+        }
+
+        return $query->orderBy('departure_time', 'desc')
+                    ->with("driver")
+                    ->get();
     }
 }
