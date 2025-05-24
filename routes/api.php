@@ -17,6 +17,7 @@ Route::middleware(['api', 'SetLocale'])->group(function () {
     Route::prefix('auth')->controller(AuthController::class)->group(function () {
         Route::post('/sign-up', 'signUp');
         Route::post('/sign-in', 'signIn');
+        Route::post('/sign-in/admin', 'signInAdmin');
         Route::post('/refresh-token', 'refreshToken');
         Route::post('/logout', 'logout');
         Route::post('/verify-reset-password-code', 'verifyResetPasswordCode');
@@ -32,6 +33,9 @@ Route::middleware(['api', 'SetLocale'])->group(function () {
         Route::get('/user', function (Request $request) {
             return $request->user();
         });
+
+        // Get users
+        Route::get('/users', [UserController::class, 'index']);
 
         // Update user profile
         Route::post('/user/profile', [UserController::class, 'updateProfile']);

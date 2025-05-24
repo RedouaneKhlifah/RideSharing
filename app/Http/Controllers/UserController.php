@@ -21,6 +21,30 @@ class UserController extends Controller
     {
         $this->authService = $authService;
     }
+
+    /**
+     * Get all users
+     */
+    public function index( Request $request) 
+    {
+        $searchTerm = $request->query('search');
+        $perPage = $request->query('per_page', 10);
+
+        $query = User::query()->where('role' , '!=', 'admin');
+        
+        if ($searchTerm) {
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+
+        // Order by newest first
+        $query->orderBy('created_at', 'desc');
+
+        // Paginate the results
+        $paginadedUsers = $query->paginate($perPage);
+
+        return response()->json($paginadedUsers);
+        
+    }
     /**
      * Get authenticated user's profile
      */

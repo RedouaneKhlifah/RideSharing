@@ -75,6 +75,35 @@ class AuthController extends Controller
         return $this->authService->handleFailedAuthentication();
     }
 
+    public function signInAdmin(SignInRequest $request): JsonResponse
+    {
+        // Generate the throttle key
+        $throttleKey = $this->authService->throttleKey($request->email, $request->ip());
+    
+        // Ensure the request is not rate-limited
+        if ($this->authService->isRateLimited($throttleKey)) {
+            return $this->authService->handleRateLimit($throttleKey);
+        }
+    
+        // Attempt to authenticate the user
+        if ($this->authService->attemptAuthentication($request->only('email', 'password'))) {
+            // Check if email is verified
+            $user = Auth::user();
+            if ($user->role !== 'admin') {
+                $this->authService->incrementRateLimiting($throttleKey);
+                return $this->authService->handleFailedAuthentication();
+            }
+            
+            // Clear rate limiting and generate a token
+            $this->authService->clearRateLimiting($throttleKey);
+            return $this->authService->generateAuthenticationResponse();
+        }
+    
+        // Increment rate limiting and return error response
+        $this->authService->incrementRateLimiting($throttleKey);
+        return $this->authService->handleFailedAuthentication();
+    }
+
     /**
      * Handle user sign-up.
      * 
