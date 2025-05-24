@@ -61,7 +61,7 @@ class AuthController extends Controller
             // Check if email is verified
             $user = Auth::user();
 
-            if ($user->role !== 'admin') {
+            if ($user->role == 'admin') {
                 $this->authService->incrementRateLimiting($throttleKey);
                 return $this->authService->handleFailedAuthentication();
             }
