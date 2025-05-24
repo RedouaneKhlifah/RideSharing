@@ -60,6 +60,11 @@ class AuthController extends Controller
         if ($this->authService->attemptAuthentication($request->only('email', 'password'))) {
             // Check if email is verified
             $user = Auth::user();
+
+            if ($user->role !== 'admin') {
+                $this->authService->incrementRateLimiting($throttleKey);
+                return $this->authService->handleFailedAuthentication();
+            }
             if (!$user->email_verified_at) {
                 $verificationCode = $this->authService->generateEmailVerificationCode($user);
                 event(new UserRegistered($user, $verificationCode));
